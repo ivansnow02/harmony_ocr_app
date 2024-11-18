@@ -1,7 +1,8 @@
 import { common } from '@kit.AbilityKit';
 import { webview } from '@kit.ArkWeb';
-import { UploadButton } from '../utils/PhotoUploader';
-import { SelectButton } from '../utils/PhotoSelector';
+import { UploadButton } from '../component/PhotoUploader';
+import { SelectButton } from '../component/PhotoSelector';
+import {CustomDialogUser} from  '../component/TableDialog';
 
 
 let context = getContext(this) as common.Context; // 请确保getContext(this)返回结果为UIAbilityContext
@@ -31,8 +32,16 @@ export struct TableOCR {
           });
 
 
-        Web({ src: 'http://192.168.31.12:8080/static/table_20241116220513.html', controller: this.controller })
 
+
+        //Web({ src: 'http://192.168.31.12:8080/static/table_20241116220513.html', controller: this.controller })
+        //.onClick(
+            // todo
+          //)
+
+        CustomDialogUser({
+          htmlUrl: "/static/test1.html"
+        })
 
       }
       .width('100%')
