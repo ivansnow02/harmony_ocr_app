@@ -42,7 +42,7 @@ export struct UploadButton {
       .onClick(async () => {
 
         let uploadConfig: iUploadConfig = {
-          url: 'http://192.168.31.12:8080' + this.api,
+          url: 'http://100.108.98.108:8080' + this.api,
           header: ({ key1: 'Content-Type', key2: 'multipart/form-data' } as iHeader),
           method: 'POST',
           files: [({
