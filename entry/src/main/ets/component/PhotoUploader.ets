@@ -36,10 +36,16 @@ export struct UploadButton {
   @State api: string = '';
   @Link fileUrl: string;
   @Link message: string;
+  @Link uploadState: number;
+
 
   build() {
-    Button("上传")
+    Column() {
+
+    Button(this.uploadState===0?"上传图片":(this.message===''?"上传中":"上传完成"))
+      .margin(5).enabled(this.fileUrl==='' || this.fileUrl === undefined ?false:true)
       .onClick(async () => {
+        this.uploadState = 1;
 
         let uploadConfig: iUploadConfig = {
           url: 'http://100.108.98.108:8080' + this.api,
@@ -61,7 +67,7 @@ export struct UploadButton {
         let file = fs.openSync(this.fileUrl, fs.OpenMode.CREATE);
         fs.copyFileSync(file.fd, cacheDir + "/test.png");
 
-        console.log("1");
+
         let uploadTask: request.UploadTask;
         // 将本地应用文件上传至网络服务器
         try {
@@ -89,5 +95,7 @@ export struct UploadButton {
       }
       )
 
+    }
   }
+
 }

@@ -1,9 +1,14 @@
 import { webview } from "@kit.ArkWeb";
+import { BusinessError, request } from "@kit.BasicServicesKit";
+import { common } from "@kit.AbilityKit";
 
+let context = getContext(this) as common.Context;
+let filesDir = context.filesDir;
 // xxx.ets
 @CustomDialog
 struct CustomDialogExample {
   @Link htmlUrl: string;
+  @Link xlsxUrl: string;
   controller?: CustomDialogController
   cancel: () => void = () => {
   }
@@ -26,6 +31,26 @@ struct CustomDialogExample {
           })
           .margin(20)
         SaveButton()
+          .onClick(
+            () => {
+              try {
+                request.downloadFile(getContext(), {
+                  url: 'http://100.108.98.108:8080'+this.xlsxUrl,
+                  filePath: filesDir + "/test1.xlsx"
+                }).then((downloadTask: request.DownloadTask) => {
+                  downloadTask.on('complete', () => {
+                    console.info('download complete');
+
+                  })
+                }).catch((err: BusinessError) => {
+                  console.error(`Invoke downloadTask failed, code is ${err.code}, message is ${err.message}`);
+                });
+              } catch (error) {
+                let err: BusinessError = error as BusinessError;
+                console.error(`Invoke downloadFile failed, code is ${err.code}, message is ${err.message}`);
+              }
+            }
+          )
       }
     }
   }
@@ -34,11 +59,14 @@ struct CustomDialogExample {
 @Component
 export struct CustomDialogUser {
   @State htmlUrl: string = '';
+  @Link message: string;
+  @State xlsxUrl: string = '';
   dialogController: CustomDialogController | null = new CustomDialogController({
     builder: CustomDialogExample({
       cancel: ()=> { this.onCancel() },
       confirm: ()=> { this.onAccept() },
-      htmlUrl: this.htmlUrl
+      htmlUrl: this.htmlUrl,
+      xlsxUrl: this.xlsxUrl
     }),
     cancel: this.existApp,
     autoCancel: true,
@@ -79,12 +107,12 @@ export struct CustomDialogUser {
 
   build() {
     Column() {
-      Button('click me')
+      Button('查看结果')
         .onClick(() => {
           if (this.dialogController != null) {
             this.dialogController.open()
           }
-        }).backgroundColor(0x317aff)
+        }).enabled(this.message===''?false:true)
     }.width('100%').margin({ top: 5 })
   }
 }

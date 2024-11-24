@@ -1,36 +1,25 @@
+import { DerivedNavPathStack, param } from '../common/NavPathStack';
+import { FaceDetection } from './FaceDetection';
 import { TableOCR } from './TableOCR';
-
 
 @Entry
 @Component
 struct Index {
-  @State message: string = 'Hello World';
+  private controller: TabsController = new TabsController()
+
 
   build() {
-    RelativeContainer() {
-      Tabs({ barPosition: BarPosition.End }) {
-        TabContent() {
-          TableOCR()
-        }
-        .tabBar('表格扫描')
+    Tabs({ barPosition: BarPosition.End, controller: this.controller }) {
+      TabContent() {
+        TableOCR()
+      }.tabBar(new BottomTabBarStyle($r('sys.media.ohos_ic_public_camera'), "表格识别"))
 
-        TabContent() {
-          Text('推荐的内容').fontSize(30)
-        }
-        .tabBar('推荐')
+      TabContent() {
+        FaceDetection()
+      }.tabBar(new BottomTabBarStyle($r('sys.media.ohos_ic_public_camera'), "人脸识别"))
 
-        TabContent() {
-          Text('发现的内容').fontSize(30)
-        }
-        .tabBar('发现')
-
-        TabContent() {
-          Text('我的内容').fontSize(30)
-        }
-        .tabBar("我的")
-      }
     }
-    .height('100%')
-    .width('100%')
+
   }
 }
+

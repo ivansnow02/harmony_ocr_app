@@ -2,50 +2,55 @@ import { common } from '@kit.AbilityKit';
 import { webview } from '@kit.ArkWeb';
 import { UploadButton } from '../component/PhotoUploader';
 import { SelectButton } from '../component/PhotoSelector';
-import {CustomDialogUser} from  '../component/TableDialog';
+import { CustomDialogUser } from '../component/TableDialog';
 
 
 let context = getContext(this) as common.Context; // 请确保getContext(this)返回结果为UIAbilityContext
 let cacheDir = context.cacheDir;
 
+@Styles
+function itemStyle() {
+  .width(336)
+  .height(621)
+  .margin({ top: 48, left: 12 })
+  .borderRadius(24)
+  .backgroundColor('#FFFFFF')
+}
+
 
 @Component
 export struct TableOCR {
+  @State uploadState: number = 0;
   @State message: string = '';
   @State fileUrl: string = '';
   controller: webview.WebviewController = new webview.WebviewController();
 
   build() {
-    Row() {
-      Column() {
-        Image(this.fileUrl).width(200);
-
-        SelectButton({
-            fileUrl: this.fileUrl,
-            message: this.message
-          });
-
-        UploadButton({
-            api: '/ocr/table',
-            fileUrl: this.fileUrl,
-            message: this.message
-          });
 
 
+    Column() {
+      Image(this.fileUrl).width(200);
+
+      SelectButton({
+        fileUrl: this.fileUrl,
+        uploadState: this.uploadState
+      })
 
 
-        //Web({ src: 'http://192.168.31.12:8080/static/table_20241116220513.html', controller: this.controller })
-        //.onClick(
-            // todo
-          //)
+      UploadButton({
+        api: '/api/v1/table',
+        fileUrl: this.fileUrl,
+        message: this.message,
+        uploadState: this.uploadState
+      });
 
-        CustomDialogUser({
-          htmlUrl: "/static/test1.html"
-        })
+      CustomDialogUser({
+        htmlUrl: "/static/test1.html",
+        xlsxUrl: "/static/test1.xlsx",
+        message:this.message
+      })
 
-      }
-      .width('100%')
     }
-    .height('100%')
+
   }
 }
